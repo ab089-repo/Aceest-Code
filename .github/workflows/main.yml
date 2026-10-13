@@ -13,7 +13,7 @@ env:
 jobs:
   build-lint:
     name: Build & Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -37,7 +37,7 @@ jobs:
   docker-build:
     name: Docker Image Assembly
     needs: build-lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -60,7 +60,7 @@ jobs:
   test:
     name: Automated Testing
     needs: docker-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
