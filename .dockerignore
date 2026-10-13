@@ -1,0 +1,27 @@
+# Keep the build context small: only what the Dockerfile copies is needed
+.git/
+.github/
+.vscode/
+.idea/
+
+devops_venv/
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+reports/
+
+*.db
+*.zip
+*.docx
+*.pdf
+The code versions for DevOps Assignment/
+
+jenkins/
+Jenkinsfile
+Dockerfile
+.dockerignore
+README.md
