@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: aceest-fitness
+
+jobs:
+  build-lint:
+    name: Build & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Compile the sources
+        run: python -m compileall -q app.py tests
+
+      - name: Lint with flake8
+        run: flake8
+
+  docker-build:
+    name: Docker Image Assembly
+    needs: build-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Build the runtime image
+        run: docker build --tag "$IMAGE:ci" .
+
+      - name: Smoke-test the container
+        run: |
+          docker run --detach --name aceest --publish 5000:5000 "$IMAGE:ci"
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:5000/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs aceest
+          exit 1
+
+  test:
+    name: Automated Testing
+    needs: docker-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Build the test image
+        run: docker build --target test --tag "$IMAGE:test" .
+
+      - name: Run Pytest inside the container
+        run: docker run --rm "$IMAGE:test"
