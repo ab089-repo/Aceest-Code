@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 100
+# Virtual environments, plus the course baseline scripts kept locally (Aceestver-*.py)
+extend-exclude = .venv,venv,devops_venv,Aceestver*.py
