@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+devops_venv/
+venv/
+.venv/
+
+# Local SQLite database created at runtime
+*.db
+
+# Editor and tooling
+.vscode/
+.idea/
+
+# Course material provided for the assignment (not part of the deliverable)
+The code versions for DevOps Assignment/
+*.zip
+*.docx
+*.pdf
