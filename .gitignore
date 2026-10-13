@@ -13,6 +13,12 @@ venv/
 # Local SQLite database created at runtime
 *.db
 
+# Local secrets (Jenkins admin password)
+.env
+
+# Test reports
+reports/
+
 # Editor and tooling
 .vscode/
 .idea/

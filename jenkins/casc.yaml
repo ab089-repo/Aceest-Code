@@ -1,0 +1,33 @@
+# Jenkins Configuration as Code: applied on every start of the controller.
+jenkins:
+  systemMessage: "ACEest Fitness & Gym build server. Configured as code from jenkins/casc.yaml."
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_ADMIN_ID:-admin}"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+jobs:
+  - script: |
+      pipelineJob('aceest-fitness-build') {
+        description('Clean build and quality gate for the ACEest Fitness Flask app. The stages are defined in the Jenkinsfile at the root of the repository.')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('${ACEEST_REPO_URL:-https://github.com/ab089-repo/Aceest-Code.git}')
+                }
+                branch('*/main')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight()
+          }
+        }
+      }
